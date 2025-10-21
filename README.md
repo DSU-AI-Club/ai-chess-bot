@@ -16,6 +16,7 @@ A Python module will be provided containing:
 * [Simple Chess Database](https://www.kaggle.com/datasets/datasnaek/chess?select=games.csv) for training or reference
 * Chess Rules PDF will be provided for reference on standard rules of play (e.g., castling, en passant, draw conditions)
 * Supplementary **videos** and an **intro to allowed libraries** may be provided to help new participants get started.
+* You may choose your own databases, but downloading them counts as part of alloted training time.
 
 ## 3. Submission Guidelines
 * All submissions must be written in Python
