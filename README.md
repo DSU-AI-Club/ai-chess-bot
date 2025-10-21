@@ -12,8 +12,8 @@ Welcome to the AI Chess Competition! This guide tells you the rules, resources, 
 A Python module will be provided containing:
 * requirements file (with the allowed python libraries)
 * boilerplate code
-* Opening Database (covering opening moves and/or end moves) to integrate into your engine
-* Chess Database for training or reference
+* [Simple Opening Database](https://www.kaggle.com/datasets/alexandrelemercier/all-chess-openings?select=openings_fen7.csv) (covering opening moves and/or end moves) to integrate into your engine.
+* [Simple Chess Database](https://www.kaggle.com/datasets/datasnaek/chess?select=games.csv) for training or reference
 * Chess Rules PDF will be provided for reference on standard rules of play (e.g., castling, en passant, draw conditions)
 * Supplementary **videos** and an **intro to allowed libraries** may be provided to help new participants get started.
 
