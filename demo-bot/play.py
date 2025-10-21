@@ -122,7 +122,7 @@ def find_best_move(board, depth):
     
     return best_move
 
-if __name__ == "__main__":
+def play():
     search_depth = 4  # Can be any positive number
     fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
     board = chess.Board(fen)

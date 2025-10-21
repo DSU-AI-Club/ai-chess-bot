@@ -1,9 +1,10 @@
 import sys 
 
+from .play import play
+
 if sys.argv[1] == "play":
     ### do stuff
-
-    pass
+    play()
 
 elif sys.argv[0] == "train":
     ### do stuff
