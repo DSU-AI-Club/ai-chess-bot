@@ -1,13 +1,15 @@
 import sys 
 
-from .play import play
-
 if sys.argv[1] == "play":
     ### do stuff
     play()
 
-elif sys.argv[0] == "train":
+elif sys.argv[1] == "train":
     ### do stuff
+
+    pass
+
+elif sys.argv[1] == "test":
 
     pass
 
