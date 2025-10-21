@@ -1,4 +1,5 @@
 import chess
+from .interface import Interface
 
 def INPUT():
     return input()
@@ -122,22 +123,22 @@ def find_best_move(board, depth):
     
     return best_move
 
-def play():
+def play(interface: Interface):
     search_depth = 4  # Can be any positive number
     fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
     board = chess.Board(fen)
 
-    color = INPUT()
+    color = interface.input()
 
     if color == "b":
-        move = INPUT()
+        move = interface.input()
         board.push_san(move)
 
     while True:
         best_move = find_best_move(board, search_depth)
-        OUTPUT(board.san(best_move))
+        interface.output(board.san(best_move))
         board.push(best_move)
 
-        move = INPUT()
+        move = interface.input()
         board.push_san(move)
-        print(board)
+        # print(board)

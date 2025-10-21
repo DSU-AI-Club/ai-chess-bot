@@ -1,3 +1,5 @@
+import chess
+
 class Interface:
     def __init__(self):
         pass
@@ -6,4 +8,24 @@ class Interface:
         pass
 
     def output():
+        pass
+
+class CompetitionInterface(Interface):
+    def __init__(self):
+        super().__init__()
+
+    def input():
+        pass
+    
+    def output():
+        pass
+
+class TestInterface(Interface):
+    def __init__(self):
+        super().__init__()
+
+    def input():
+        pass
+
+    def output(gamestate):
         pass
