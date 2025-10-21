@@ -40,11 +40,19 @@ A Python module will be provided containing:
 * **Handling Inference:** Your script must be optimized for fast and efficient **inference** during the match.
 
 ## 5. Hardware and Time Constraints
-* **Hardware Specs:** 
-* **Time Limit:** 
+* **Hardware Specs:**
+* AMD Ryzen 9 5950X @ 5.09 GHz
+* NVIDIA 3090
+* Totals:
+* 64 GB RAM
+* 24 GB VRAM
+* Runtime Limits:
+* 25 GB RAM at any time PER PLAYER
+* 9 GB VRAM at any time PER PLAYER
+* **Time Limit:** 5 minutes per side to make ALL moves (similar to human time controls). That is, you have a 5 minute timer that counts down when it is your turn and stops when you submit your move. When you run out of time, you lose.
 
 ## 6. After Competition Period
-* After the competition concludes, teams will be required to prepare and deliver a presentation on methodology, explaining your algorithm, training process, and time management strategies.
+* After the competition concludes, we encourage teams to prepare and deliver a presentation on methodology, explaining your algorithm, training process, and time management strategies.
 * **Award:** The winning team will receive a **Raspberry Pi 4 kit**!
 
 **Have fun!**
