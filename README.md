@@ -33,7 +33,8 @@ A Python module will be provided containing:
 * Final Competition Date: **Sunday, November 9th, 10:00 am**, at Dakota Playhouse
 
 ## 4. Engine Parameters and Training
-* **Chess Engine:** You need to implement a functional **Chess engine** using the allowed libraries.
+* **Chess Engine:** You need to implement a functional **chess engine** using the allowed libraries. This can be neural, deterministic, or a mix of both!
+* **I/O** Use the INPUT and OUTPUT commands we supply for io. Both will be strings in SAN form.
 * **Hyperparameters:** Be prepared to detail and tune your model's **Hyperparameters**.
 * **Depth:** The **search depth** of your engine is a critical factor and must be optimized within the time constraints.
 * **Handling Training:** Your submission script will be run on the specified hardware. Ensure your training process is integrated or your model is pre-trained and saved.
