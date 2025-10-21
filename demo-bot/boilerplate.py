@@ -1,22 +1,31 @@
 import chess
 
+def INPUT():
+    return input()
+
+def OUTPUT(x):
+    print(x)
+
 # Piece values for evaluation
 PIECE_VALUES = {
-    chess.PAWN: 100,
-    chess.KNIGHT: 320,
-    chess.BISHOP: 330,
-    chess.ROOK: 500,
-    chess.QUEEN: 900,
-    chess.KING: 20000
+    chess.PAWN: 1,
+    chess.KNIGHT: 3,
+    chess.BISHOP: 3,
+    chess.ROOK: 5,
+    chess.QUEEN: 9,
+    chess.KING: 0
 }
 
 def evaluate_board(board):
     """
     Evaluate the board based on material count.
+    Returns score from WHITE's perspective.
     Positive score favors white, negative favors black.
     """
     if board.is_checkmate():
-        return -20000 if board.turn else 20000
+        # If it's White's turn and checkmate, White lost (bad for White)
+        # If it's Black's turn and checkmate, Black lost (good for White)
+        return float('-inf') if board.turn == chess.WHITE else float('inf')
     
     if board.is_stalemate() or board.is_insufficient_material():
         return 0
@@ -33,18 +42,18 @@ def evaluate_board(board):
 def minimax(board, depth, alpha, beta, maximizing_player):
     """
     Minimax algorithm with alpha-beta pruning.
+    Always evaluates from White's perspective.
     
     Args:
         board: chess.Board object
         depth: remaining depth to search
         alpha: best value for maximizer
         beta: best value for minimizer
-        maximizing_player: True if maximizing, False if minimizing
+        maximizing_player: True if White's turn, False if Black's turn
     
     Returns:
-        Best evaluation score
+        Best evaluation score from White's perspective
     """
-    # Base case: depth 0 or game over
     if depth == 0 or board.is_game_over():
         return evaluate_board(board)
     
@@ -57,7 +66,7 @@ def minimax(board, depth, alpha, beta, maximizing_player):
             max_eval = max(max_eval, eval_score)
             alpha = max(alpha, eval_score)
             if beta <= alpha:
-                break  # Beta cutoff
+                break
         return max_eval
     else:
         min_eval = float('inf')
@@ -68,7 +77,7 @@ def minimax(board, depth, alpha, beta, maximizing_player):
             min_eval = min(min_eval, eval_score)
             beta = min(beta, eval_score)
             if beta <= alpha:
-                break  # Alpha cutoff
+                break
         return min_eval
 
 def find_best_move(board, depth):
@@ -83,22 +92,29 @@ def find_best_move(board, depth):
         Best move in UCI notation (e.g., 'e2e4')
     """
     best_move = None
-    best_value = float('-inf') if board.turn == chess.WHITE else float('inf')
     alpha = float('-inf')
     beta = float('inf')
     
-    for move in board.legal_moves:
-        board.push(move)
-        board_value = minimax(board, depth - 1, alpha, beta, 
-                             not board.turn == chess.WHITE)
-        board.pop()
-        
-        if board.turn == chess.WHITE:
+    if board.turn == chess.WHITE:
+        # White wants to MAXIMIZE the score
+        best_value = float('-inf')
+        for move in board.legal_moves:
+            board.push(move)
+            board_value = minimax(board, depth - 1, alpha, beta, False)
+            board.pop()
+            
             if board_value > best_value:
                 best_value = board_value
                 best_move = move
             alpha = max(alpha, best_value)
-        else:
+    else:
+        # Black wants to MINIMIZE the score
+        best_value = float('inf')
+        for move in board.legal_moves:
+            board.push(move)
+            board_value = minimax(board, depth - 1, alpha, beta, True)
+            board.pop()
+            
             if board_value < best_value:
                 best_value = board_value
                 best_move = move
@@ -107,20 +123,21 @@ def find_best_move(board, depth):
     return best_move
 
 if __name__ == "__main__":
+    search_depth = 4  # Can be any positive number
     fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-    
     board = chess.Board(fen)
-    search_depth = 3 
-    
-    print(f"Position: {fen}")
-    print(f"Current turn: {'White' if board.turn else 'Black'}")
-    print(board)
-    print()
-    
-    best_move = find_best_move(board, search_depth)
-    
-    if best_move:
-        print(f"Best move (UCI): {best_move}")
-        print(f"Best move (SAN): {board.san(best_move)}")
-    else:
-        print("No legal moves available")
+
+    color = INPUT()
+
+    if color == "b":
+        move = INPUT()
+        board.push_san(move)
+
+    while True:
+        best_move = find_best_move(board, search_depth)
+        OUTPUT(board.san(best_move))
+        board.push(best_move)
+
+        move = INPUT()
+        board.push_san(move)
+        print(board)
