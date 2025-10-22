@@ -15,17 +15,17 @@ class CompetitionInterface(Interface):
         super().__init__()
 
     def input(self):
-        return input("Test input: ")
+        return input()
 
-    def output(self, gamestate):
-        print(gamestate)
+    def output(self, move):
+        print(move)
 
 class TestInterface(Interface):
     def __init__(self):
         super().__init__()
 
     def input(self):
-        return input("Test input: ")
+        return input("Enter move (SAN): ")
 
-    def output(self, gamestate):
-        print(gamestate)
+    def output(self, move):
+        print(move)

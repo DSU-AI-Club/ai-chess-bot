@@ -17,7 +17,18 @@ class BotProcess:
             ['python', '-m', str(module_path), color],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
+            stderr=subprocesif not module_path.exists():
+            raise FileNotFoundError(f"Bot module not found: {module_path}")
+        
+        self.process = subprocess.Popen(
+            ['python', '-m', str(module_path)],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
+            text=True,
+            bufsize=1  # Line buffered
+        )
+        self.time_remaining = 300.0  # 5 minutes in secondss.PIPE,
             text=True,
             bufsize=1  # Line buffered
         )
