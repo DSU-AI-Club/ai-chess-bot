@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 class BotProcess:
-    def __init__(self, module_name):
+    def __init__(self, module_name, color):
         self.module_name = module_name
         module_path = Path(__file__).parent.parent / f"{module_name}"
         
@@ -14,7 +14,7 @@ class BotProcess:
             raise FileNotFoundError(f"Bot module not found: {module_path}")
         
         self.process = subprocess.Popen(
-            ['python', '-m', str(module_path)],
+            ['python', '-m', str(module_path), color],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -23,21 +23,22 @@ class BotProcess:
         )
         self.time_remaining = 300.0  # 5 minutes in seconds
     
-    def get_move(self, gamestate, timeout=None):
-        """Send gamestate to bot and get move back with timing"""
+    def get_move(self, last_move_san, timeout=None):
+        """Send opponent's last move to bot and get move back with timing"""
         if timeout is None:
             timeout = self.time_remaining
         
         start_time = time.time()
         
         try:
-            # Send gamestate as JSON line
-            self.process.stdin.write(json.dumps(gamestate) + '\n')
+            # Send opponent's last move as plain text (or empty line for first move)
+            move_to_send = last_move_san if last_move_san else ""
+            self.process.stdin.write(move_to_send + '\n')
             self.process.stdin.flush()
             
             # Read move from stdout with timeout
             self.process.stdout.flush()
-            move_line = self._read_with_timeout(timeout)
+            move_san = self._read_with_timeout(timeout)
             
             elapsed = time.time() - start_time
             self.time_remaining -= elapsed
@@ -45,14 +46,11 @@ class BotProcess:
             if self.time_remaining <= 0:
                 return None, "timeout"
             
-            if move_line is None:
+            if move_san is None:
                 return None, "timeout"
             
-            move_data = json.loads(move_line)
-            return move_data.get('move'), None
-            
-        except json.JSONDecodeError as e:
-            return None, f"invalid_json: {e}"
+            return move_san, None
+        
         except Exception as e:
             return None, f"error: {e}"
     
@@ -78,17 +76,16 @@ class BotProcess:
 class ChessModerator:
     def __init__(self, white_module, black_module):
         self.board = chess.Board()
-        self.white_bot = BotProcess(white_module)
-        self.black_bot = BotProcess(black_module)
+        self.white_bot = BotProcess(white_module, 'w')
+        self.black_bot = BotProcess(black_module, 'b')
         self.white_name = white_module
         self.black_name = black_module
+        self.last_move_san = None
     
     def run_game(self):
         """Run a complete chess game and return the winner"""
         print(f"Starting game: {self.white_name} (White) vs {self.black_name} (Black)")
         print(f"Initial position:\n{self.board}\n")
-        
-        move_count = 0
         
         try:
             while not self.board.is_game_over():
@@ -96,20 +93,11 @@ class ChessModerator:
                 current_name = self.white_name if self.board.turn == chess.WHITE else self.black_name
                 color = "White" if self.board.turn == chess.WHITE else "Black"
                 
-                # Prepare gamestate
-                gamestate = {
-                    'fen': self.board.fen(),
-                    'legal_moves': [move.uci() for move in self.board.legal_moves],
-                    'color': 'white' if self.board.turn == chess.WHITE else 'black',
-                    'move_number': self.board.fullmove_number,
-                    'time_remaining': current_bot.time_remaining
-                }
-                
                 print(f"Move {self.board.fullmove_number} - {color} ({current_name}) to move")
                 print(f"Time remaining: {current_bot.time_remaining:.1f}s")
                 
                 # Get move from bot
-                move_uci, error = current_bot.get_move(gamestate)
+                move_san, error = current_bot.get_move(self.last_move_san)
                 
                 if error:
                     print(f"\n{color} ({current_name}) error: {error}")
@@ -119,20 +107,23 @@ class ChessModerator:
                 
                 # Validate and apply move
                 try:
-                    move = chess.Move.from_uci(move_uci)
-                    if move not in self.board.legal_moves:
-                        print(f"\n{color} ({current_name}) proposed illegal move: {move_uci}")
-                        winner = self.black_name if self.board.turn == chess.WHITE else self.white_name
-                        return winner, "illegal_move"
-                    
+                    move = self.board.parse_san(move_san)
                     self.board.push(move)
-                    print(f"{color} plays: {move_uci}")
+                    self.last_move_san = move_san
+                    self.move_history.append({
+                        'san': move_san,
+                        'color': color,
+                        'player': current_name,
+                        'fen': self.board.fen()
+                    })
+                    
+                    print(f"{color} plays: {move_san}")
                     print(f"Position:\n{self.board}\n")
                     
-                except ValueError:
-                    print(f"\n{color} ({current_name}) proposed invalid move format: {move_uci}")
+                except (ValueError, chess.IllegalMoveError, chess.InvalidMoveError) as e:
+                    print(f"\n{color} ({current_name}) proposed invalid/illegal move: {move_san}")
                     winner = self.black_name if self.board.turn == chess.WHITE else self.white_name
-                    return winner, "invalid_move_format"
+                    return winner, "illegal_move"
             
             # Game ended normally
             result = self.board.result()
