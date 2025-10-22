@@ -1,5 +1,4 @@
-import sys 
-import chess
+import sys
 from .play import play
 from .train import train
 from .interface import TestInterface, CompetitionInterface
@@ -7,7 +6,7 @@ from .interface import TestInterface, CompetitionInterface
 if sys.argv[1] == "play":
     ### do stuff
 
-    play(CompetitionInterface)
+    play(CompetitionInterface())
 
 elif sys.argv[1] == "train":
     ### do stuff
@@ -16,7 +15,7 @@ elif sys.argv[1] == "train":
 
 elif sys.argv[1] == "test":
 
-    play(TestInterface)
+    play(TestInterface())
 
 else:
 
