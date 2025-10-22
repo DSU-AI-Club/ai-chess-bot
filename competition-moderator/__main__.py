@@ -32,9 +32,9 @@ class BotProcess:
         
         try:
             # Send opponent's last move as plain text (or empty line for first move)
-            move_to_send = last_move_san if last_move_san else ""
-            self.process.stdin.write(move_to_send + '\n')
-            self.process.stdin.flush()
+            if last_move_san is not None:
+                self.process.stdin.write(last_move_san + '\n')
+                self.process.stdin.flush()
             
             # Read move from stdout with timeout
             self.process.stdout.flush()
@@ -111,12 +111,6 @@ class ChessModerator:
                     move = self.board.parse_san(move_san)
                     self.board.push(move)
                     self.last_move_san = move_san
-                    self.move_history.append({
-                        'san': move_san,
-                        'color': color,
-                        'player': current_name,
-                        'fen': self.board.fen()
-                    })
                     
                     print(f"{color} plays: {move_san}")
                     print(f"Position:\n{self.board}\n")
