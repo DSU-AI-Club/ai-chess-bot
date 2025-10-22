@@ -8,13 +8,13 @@ from pathlib import Path
 class BotProcess:
     def __init__(self, module_name):
         self.module_name = module_name
-        module_path = Path(__file__).parent.parent / f"{module_name}.py"
+        module_path = Path(__file__).parent.parent / f"{module_name}"
         
         if not module_path.exists():
             raise FileNotFoundError(f"Bot module not found: {module_path}")
         
         self.process = subprocess.Popen(
-            ['python', str(module_path)],
+            ['python', '-m', str(module_path)],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
