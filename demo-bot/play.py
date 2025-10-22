@@ -1,11 +1,6 @@
 import chess
 from .interface import Interface
 
-def INPUT():
-    return input()
-
-def OUTPUT(x):
-    print(x)
 
 # Piece values for evaluation
 PIECE_VALUES = {
