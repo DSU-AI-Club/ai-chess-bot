@@ -9,14 +9,17 @@ Welcome to the AI Chess Competition! This guide tells you the rules, resources, 
 * Do not just clone GitHub repositories or do any form of plagiarism!
 
 ## 2. Materials Provided
-A Python module will be provided containing:
-* requirements file (with the allowed python libraries)
-* boilerplate code
-* [Simple Opening Database](https://www.kaggle.com/datasets/alexandrelemercier/all-chess-openings?select=openings_fen7.csv) (covering opening moves and/or end moves) to integrate into your engine.
-* [Simple Chess Database](https://www.kaggle.com/datasets/datasnaek/chess?select=games.csv) for training or reference
+Sample chess bot:
+* A Python module will be provided containing boilerplate code and a working (not necessarily 'smart') sample bot.
+Accessory materials:
+* requirements.txt file (with the allowed python libraries)
 * Chess Rules PDF will be provided for reference on standard rules of play (e.g., castling, en passant, draw conditions)
 * Supplementary **videos** and an **intro to allowed libraries** may be provided to help new participants get started.
-* You may choose your own databases, but downloading them counts as part of alloted training time.
+Other resources we suggest you take advantage of:
+* [Simple Opening Database](https://www.kaggle.com/datasets/alexandrelemercier/all-chess-openings?select=openings_fen7.csv) (covering opening moves and/or end moves) to integrate into your engine.
+* [Simple Chess Database](https://www.kaggle.com/datasets/datasnaek/chess?select=games.csv) for training or reference
+* These files will be provided with the sample bot (see bot-spec.md for details), so you won't be required to download them yourself at the expense of training time
+* You may use any other publicly available dataset, but your training script must handle downloading them, which counts against alloted training time.
 
 ## 3. Submission Guidelines
 * All submissions must be written in Python
@@ -30,21 +33,23 @@ A Python module will be provided containing:
     * `python-chess`
 * No `import async` please!
 * Submission deadline: **Thursday, November 6th, 11:59 pm**
-* Submission format: submit python scripts (named `__main__.py` for inference and `__train__.py` for training) via Discord to 
-* Final Competition Date: **Sunday, November 9th, 10:00 am**, at Dakota Playhouse
+* Submission format: submit zipped folder containing a python module that complies with the bot specification (see bot-spec.md) via Discord
+* Final Competition Date: **Sunday, November 9th, 10:00 am**, at the Dakota Playhouse
 
 ## 4. Engine Parameters and Training
 * **Chess Engine:** You need to implement a functional **chess engine** using the allowed libraries. This can be neural, deterministic, or a mix of both!
-* **I/O** Use the INPUT and OUTPUT commands we supply for io. Both will be strings in SAN form.
+* **I/O** Use the INPUT and OUTPUT commands we supply for io (see bot spec). Both will be strings in SAN form.
 * **Hyperparameters:** Be prepared to detail and tune your model's **Hyperparameters**.
 * **Depth:** The **search depth** of your engine is a critical factor and must be optimized within the time constraints.
-* **Handling Training:** Your submission script will be run on the specified hardware. Ensure your training process is integrated or your model is pre-trained and saved.
+* **Handling Training:** Your submission script will be run on the specified hardware. Ensure your training process is integrated in a reasonable fashion with the game playing script, or your model is pre-trained by the training script then saved in a manner that the game playing script can use.
 * **Handling Inference:** Your script must be optimized for fast and efficient **inference** during the match.
 
 ## 5. Hardware and Time Constraints
 * **Hardware Specs:**
 * AMD Ryzen 9 5950X @ 5.09 GHz
-* NVIDIA 3090
+* NVIDIA RTX 3090
+* Persistent Memory:
+* Limit - 20GB disk space used per bot (data on disk which persists between training and playing)
 * Totals:
 * 64 GB RAM
 * 24 GB VRAM
