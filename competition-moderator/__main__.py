@@ -14,7 +14,7 @@ class BotProcess:
             raise FileNotFoundError(f"Bot module not found: {module_path}")
         
         self.process = subprocess.Popen(
-            ['python', '-m', str(module_path), color],
+            ['python', '-m', str(module_path), "play", color],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -49,6 +49,7 @@ class BotProcess:
             if move_san is None:
                 return None, "timeout"
             
+            print(f"DEBUG: move {move_san}")
             return move_san, None
         
         except Exception as e:
