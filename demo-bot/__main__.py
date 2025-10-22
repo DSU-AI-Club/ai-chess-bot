@@ -6,7 +6,7 @@ from .interface import TestInterface, CompetitionInterface
 if sys.argv[1] == "play":
     ### do stuff
 
-    play(CompetitionInterface())
+    play(CompetitionInterface(), color = sys.argv[2])
 
 elif sys.argv[1] == "train":
     ### do stuff
@@ -15,7 +15,7 @@ elif sys.argv[1] == "train":
 
 elif sys.argv[1] == "test":
 
-    play(TestInterface())
+    play(TestInterface(), color = sys.argv[2])
 
 else:
 

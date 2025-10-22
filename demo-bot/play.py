@@ -118,12 +118,12 @@ def find_best_move(board, depth):
     
     return best_move
 
-def play(interface: Interface):
+def play(interface: Interface, color = "w"):
     search_depth = 4  # Can be any positive number
     fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
     board = chess.Board(fen)
 
-    color = interface.input()
+    # color = interface.input()
 
     if color == "b":
         move = interface.input()
