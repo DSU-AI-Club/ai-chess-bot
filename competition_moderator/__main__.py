@@ -151,27 +151,47 @@ board = chess.Board(fen)
 print(board)
 
 def play_game():
+
+    def opponent_of(p: str) -> str:
+        return {
+            "w": "b",
+            "b": "w"
+        }[p.lower()]
+
+    def expand_name(name: str):
+        return {
+            'w':"White",
+            'b':"Black"
+        }[name.lower()]
+
+    def process_move(player, move):
+        nonlocal board
+
+        if move is None:
+            print(f"{expand_name(player)} bot timed out / failed to make a move.")
+            return opponent_of(player)
+        
+        try:
+            parsed_move = board.parse_san(move)
+        except Exception as e:
+            print(f"Invalid/Illegal by {expand_name(player)}: {move} - {e}")
+            return opponent_of(player)
+
+
     while True:
         
         move = White_bot.get_move()
 
-        if move is None:
-            print("White bot timed out / failed to make a move.")
-            return "b"
-
-        try:
-            parsed_move = board.parse_san(move)
-            if not board.is_legal(parsed_move):
-                print(f"Illegal move by White: {move}")
-                return "b"
-        except Exception as e:
-            print(f"Invalid move format by White: {move} - {e}")
-            return "b"
+        process_move("w", move)
 
         board.push_san(move)
 
         print(f"White makes move: {move}")
         print(board)
+
+        if board.is_checkmate():
+            print("White has checkmated black.")
+            return "w"
 
         Black_bot.send_move(move)
         move = Black_bot.get_move()
@@ -194,8 +214,15 @@ def play_game():
         print(f"Black makes move: {move}")
         print(board)
 
+        if board.is_checkmate():
+            print("Black has checkmated white.")
+            return "b"
+
         White_bot.send_move(move)
 
 winner = play_game()
 
-print("\n" + {'w':'White','b':'Black'}[winner]+" won!")
+if winner == "d":
+    print("Draw")
+else:
+    print("\n" + {'w':'White','b':'Black'}[winner]+" won!")
