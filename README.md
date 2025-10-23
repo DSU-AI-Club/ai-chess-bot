@@ -31,7 +31,7 @@ Other resources we suggest you take advantage of:
     * `tensorflow`
     * `pandas`
     * `python-chess`
-* No `import async` please!
+* No multiprocessing/multithreading please!
 * Submission deadline: **Thursday, November 6th, 11:59 pm**
 * Submission format: submit zipped folder containing a python module that complies with the bot specification (see bot-spec.md) via Discord
 * Final Competition Date: **Sunday, November 9th, 10:00 am**, at the Dakota Playhouse
