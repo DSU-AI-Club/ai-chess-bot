@@ -173,9 +173,21 @@ def play_game():
         
         try:
             parsed_move = board.parse_san(move)
+
         except Exception as e:
             print(f"Invalid/Illegal by {expand_name(player)}: {move} - {e}")
             return opponent_of(player)
+        
+        board.push_san(move)
+
+        print(f"{expand_name(player)} makes move: {move}")
+        print(board)
+        print()
+
+        if board.is_checkmate():
+            print(f"{expand_name(player)} has checkmated {expand_name(opponent_of(player))}.")
+            return player
+
 
 
     while True:
@@ -183,40 +195,12 @@ def play_game():
         move = White_bot.get_move()
 
         process_move("w", move)
-
-        board.push_san(move)
-
-        print(f"White makes move: {move}")
-        print(board)
-
-        if board.is_checkmate():
-            print("White has checkmated black.")
-            return "w"
-
+        
         Black_bot.send_move(move)
+
         move = Black_bot.get_move()
 
-        if move is None:
-            print("Black bot timed out / failed to make a move.")
-            return "w"
-        
-        try:
-            parsed_move = board.parse_san(move)
-            if not board.is_legal(parsed_move):
-                print(f"Illegal move by Black: {move}")
-                return "w"
-        except Exception as e:
-            print(f"Invalid move format by Black: {move} - {e}")
-            return "w"
-
-        board.push_san(move)
-
-        print(f"Black makes move: {move}")
-        print(board)
-
-        if board.is_checkmate():
-            print("Black has checkmated white.")
-            return "b"
+        process_move("b", move)
 
         White_bot.send_move(move)
 
