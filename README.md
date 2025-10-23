@@ -4,7 +4,7 @@ Welcome to the AI Chess Competition! This guide tells you the rules, resources, 
 
 ## 1. General Rules
 * Team Size: 1-3 people
-* Signup: [this google form]()
+* Signup: [this google form](https://forms.gle/eJiDRibwwXobutfSA)
 * Contact: for any questions, issues, or clarifications, reach out to one of the AI Club officers or Eddie French on Discord
 * Do not just clone GitHub repositories or do any form of plagiarism!
 
