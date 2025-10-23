@@ -66,7 +66,7 @@ class BotProcess:
             print(f"Warning: Could not set stderr to non-blocking (OS may not support fcntl): {e}")
 
 
-        self.time_remaining = 300.0  # 5 minutes in seconds
+        self.time_remaining = 10.0  # 5 minutes in seconds
     
     def send_move(self, move: str):
         """Sends a move to the bot's stdin."""
@@ -92,30 +92,44 @@ class BotProcess:
         except (IOError, TypeError): # Handle no output
             return ""
 
-    def get_move(self, timeout) -> Optional[str]:
+    def get_move(self) -> Optional[str]:
         """
-        Gets a move from the bot's stdout.
+        Gets a move from the bot's stdout, managing the bot's total time clock.
         Returns the move string, or None if the bot timed out, crashed, or sent EOF.
         """
-        ready, _, _ = select.select([self.process.stdout], [], [], timeout)
+
+        start_time = time.time()
+
+        # Bot can only use the time it has, up to the max turn timeout
+        if self.time_remaining <= 0:
+            print(f"Bot {self.color.upper()} is out of time before move could be requested.")
+            return None
+        
+        ready, _, _ = select.select([self.process.stdout], [], [], self.time_remaining)
+
+        time_spent = time.time() - start_time
+        self.time_remaining -= time_spent
 
         if ready:
             line = self.process.stdout.readline()
             
-            # --- FIX 2: Check for EOF (empty string) ---
+            # Check for EOF (empty string)
             if not line: 
                 # An empty string from readline() means EOF - the process died.
                 stderr_output = self.read_stderr()
                 print(f"Bot {self.color} process died (EOF). Stderr:\n---\n{stderr_output}\n---")
                 return None # Signal death/crash
-                
+            
+            # Print remaining time for debugging
+            print(f"Bot {self.color} time remaining: {self.time_remaining:.2f}s")
             return line.strip()
         
         # Timeout occurred
         stderr_output = self.read_stderr()
-        print(f"Bot {self.color} timed out. Stderr so far:\n---\n{stderr_output}\n---")
+        print(f"Bot {self.color} timed out. Used {time_spent:.2f}s.")
+        print(f"Bot {self.color} time remaining: {self.time_remaining:.2f}s")
         return None
-
+    
     def close(self):
         """Terminate the bot process."""
         print(f"Stopping {self.color} bot...")
@@ -135,35 +149,53 @@ fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 board = chess.Board(fen)
 
 print(board)
-while True:
-    # White's turn
-    move = White_bot.get_move(300)
-    try:
-        parsed_move = board.parse_san(move)
-        if board.is_legal(parsed_move):
-            board.push(parsed_move)
-            print(f"White makes move: {move}")
-            print(board)
-            Black_bot.send_move(move)
-        else:
-            print(f"Illegal move by White: {move}")
-            break
-    except Exception as e:
-        print(f"Invalid move format by White: {move} - {e}")
-        break
 
-    # Black's turn
-    move = Black_bot.get_move(300)
-    try:
-        parsed_move = board.parse_san(move)
-        if board.is_legal(parsed_move):
-            board.push(parsed_move)
-            print(f"Black makes move: {move}")
-            print(board)
-            White_bot.send_move(move)
-        else:
-            print(f"Illegal move by Black: {move}")
-            break
-    except Exception as e:
-        print(f"Invalid move format by Black: {move} - {e}")
-        break
+def play_game():
+    while True:
+        
+        move = White_bot.get_move()
+
+        if move is None:
+            print("White bot timed out / failed to make a move.")
+            return "b"
+
+        try:
+            parsed_move = board.parse_san(move)
+            if not board.is_legal(parsed_move):
+                print(f"Illegal move by White: {move}")
+                return "b"
+        except Exception as e:
+            print(f"Invalid move format by White: {move} - {e}")
+            return "b"
+
+        board.push_san(move)
+
+        print(f"White makes move: {move}")
+        print(board)
+
+        Black_bot.send_move(move)
+        move = Black_bot.get_move()
+
+        if move is None:
+            print("Black bot timed out / failed to make a move.")
+            return "w"
+        
+        try:
+            parsed_move = board.parse_san(move)
+            if not board.is_legal(parsed_move):
+                print(f"Illegal move by Black: {move}")
+                return "w"
+        except Exception as e:
+            print(f"Invalid move format by Black: {move} - {e}")
+            return "w"
+
+        board.push_san(move)
+
+        print(f"Black makes move: {move}")
+        print(board)
+
+        White_bot.send_move(move)
+
+winner = play_game()
+
+print("\n" + {'w':'White','b':'Black'}[winner]+" won!")
