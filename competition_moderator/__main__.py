@@ -4,6 +4,7 @@ import select
 import sys
 import os
 import fcntl
+import chess
 from typing import Optional
 
 class BotProcess:
@@ -130,15 +131,24 @@ class BotProcess:
 White_bot = BotProcess(sys.argv[1], "w")
 Black_bot = BotProcess(sys.argv[2], "b")
 
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+board = chess.Board(fen)
+
+print(board)
 while True:
     
     move = White_bot.get_move(300)
+    board.push_san(move)
 
     print(f"White makes move: {move}")
+    print(board)
 
     Black_bot.send_move(move)
+
     move = Black_bot.get_move(300)
+    board.push_san(move)
 
     print(f"Black makes move: {move}")
+    print(board)
 
     White_bot.send_move(move)
