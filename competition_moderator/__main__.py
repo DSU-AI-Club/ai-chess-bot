@@ -136,19 +136,34 @@ board = chess.Board(fen)
 
 print(board)
 while True:
-    
+    # White's turn
     move = White_bot.get_move(300)
-    board.push_san(move)
+    try:
+        parsed_move = board.parse_san(move)
+        if board.is_legal(parsed_move):
+            board.push(parsed_move)
+            print(f"White makes move: {move}")
+            print(board)
+            Black_bot.send_move(move)
+        else:
+            print(f"Illegal move by White: {move}")
+            break
+    except Exception as e:
+        print(f"Invalid move format by White: {move} - {e}")
+        break
 
-    print(f"White makes move: {move}")
-    print(board)
-
-    Black_bot.send_move(move)
-
+    # Black's turn
     move = Black_bot.get_move(300)
-    board.push_san(move)
-
-    print(f"Black makes move: {move}")
-    print(board)
-
-    White_bot.send_move(move)
+    try:
+        parsed_move = board.parse_san(move)
+        if board.is_legal(parsed_move):
+            board.push(parsed_move)
+            print(f"Black makes move: {move}")
+            print(board)
+            White_bot.send_move(move)
+        else:
+            print(f"Illegal move by Black: {move}")
+            break
+    except Exception as e:
+        print(f"Invalid move format by Black: {move} - {e}")
+        break
