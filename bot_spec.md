@@ -17,3 +17,6 @@ python -m bot_module_name train
 python -m bot_module_name play w
 python -m bot_module_name play b
 ```
+
+Your bot must be able to handle being invoked in each of the above 3 options.
+
