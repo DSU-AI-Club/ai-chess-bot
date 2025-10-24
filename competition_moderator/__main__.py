@@ -145,12 +145,17 @@ class BotProcess:
 White_bot = BotProcess(sys.argv[1], "w")
 Black_bot = BotProcess(sys.argv[2], "b")
 
-fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-board = chess.Board(fen)
+# fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+# board = chess.Board(fen)
 
-print(board)
+# print(board)
 
 def play_game():
+
+    fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+    board = chess.Board(fen)
+
+    print(board)
 
     def opponent_of(p: str) -> str:
         return {
