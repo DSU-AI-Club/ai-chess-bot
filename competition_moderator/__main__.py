@@ -197,7 +197,19 @@ def play_game():
         if board.is_checkmate():
             print(f"{expand_name(player)} has checkmated {expand_name(opponent_of(player))}.")
             return player
-
+        
+        # draw cases
+        if board.is_insufficient_material():
+            return 'd insufficient material'
+        if board.is_stalemate():
+            return 'd stalemate'
+        if board.is_seventyfive_moves():
+            return 'd seventy-five moves'
+        if board.is_fivefold_repetition():
+            return 'd fivefold repetition'
+        if board.can_claim_threefold_repetition():
+            return 'd threefold repetion'
+        
 
 
     while True:
@@ -220,7 +232,7 @@ def play_game():
 
 winner = play_game()
 
-if winner == "d":
-    print("Draw")
+if winner[0] == "d":
+    print(f"Draw by {winner[2:]}")
 else:
     print("\n" + {'w':'White','b':'Black'}[winner]+" won!")
