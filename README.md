@@ -55,7 +55,7 @@ Other resources we suggest you take advantage of:
 * 24 GB VRAM
 * Runtime Limits:
 * 25 GB RAM at any time PER PLAYER
-* 9 GB VRAM at any time PER PLAYER
+* 10 GB VRAM at any time PER PLAYER
 * **Time Limit:** 5 minutes per side to make ALL moves (similar to human time controls). That is, you have a 5 minute timer that counts down when it is your turn and stops when you submit your move. When you run out of time, you lose.
 
 ## 6. After Competition Period
