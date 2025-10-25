@@ -20,6 +20,7 @@ Other resources we suggest you take advantage of:
 * [Simple Chess Database](https://www.kaggle.com/datasets/datasnaek/chess?select=games.csv) for training or reference
 * These files will be provided with the sample bot (see bot-spec.md for details), so you won't be required to download them yourself at the expense of training time
 * You may use any other publicly available dataset, but your training script must handle downloading them, which counts against alloted training time.
+* You may use the competition moderator to test your bot against the demo bots. To run with output in terminal, run `python -m compeition_moderator /path/to/white/bot /path/to/black/bot`. To run with graphical output, run `./visualize.sh /path/to/white/bot /path/to/black/bot`. Note: if running with gui, press `f` to toggle fullscreen.
 
 ## 3. Submission Guidelines
 * All submissions must be written in Python

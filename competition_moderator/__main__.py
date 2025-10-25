@@ -77,11 +77,6 @@ class BotProcess:
                 return
 
             self.process.stdin.write(move + '\n')
-
-            # try:
-            #     self.process.stdin.write(move + '\n')
-            # except TypeError:
-            #     self.process.stdin.write('ENDGAME' + '\n')
             self.process.stdin.flush()
         
         # --- FIX 1: Correctly catch the exception ---
