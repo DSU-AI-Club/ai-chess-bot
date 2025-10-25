@@ -66,7 +66,7 @@ class BotProcess:
             print(f"Warning: Could not set stderr to non-blocking (OS may not support fcntl): {e}")
 
 
-        self.time_remaining = 10.0  # 5 minutes in seconds
+        self.time_remaining = 300.0  # 5 minutes in seconds = 300
     
     def send_move(self, move: str):
         """Sends a move to the bot's stdin."""
@@ -77,6 +77,11 @@ class BotProcess:
                 return
 
             self.process.stdin.write(move + '\n')
+
+            # try:
+            #     self.process.stdin.write(move + '\n')
+            # except TypeError:
+            #     self.process.stdin.write('ENDGAME' + '\n')
             self.process.stdin.flush()
         
         # --- FIX 1: Correctly catch the exception ---
@@ -199,13 +204,17 @@ def play_game():
         
         move = White_bot.get_move()
 
-        process_move("w", move)
-        
+        wcheck = process_move("w", move)
+        if wcheck:
+            return wcheck
+
         Black_bot.send_move(move)
 
         move = Black_bot.get_move()
 
-        process_move("b", move)
+        wcheck = process_move("b", move)
+        if wcheck:  
+            return wcheck
 
         White_bot.send_move(move)
 
